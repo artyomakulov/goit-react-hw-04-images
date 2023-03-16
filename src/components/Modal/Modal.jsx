@@ -8,24 +8,24 @@ const modalRoot = document.querySelector('#modal-root');
 
 export default function Modal(props) {
   
+  const onBackdropClick = e => {
+    if (e.target === e.currentTarget) {
+     props.onClose()
+   } 
+ }
+
+ const handleKeyDown = e => {
+   if (e.code === 'Escape') {     
+     props.onClose()
+   }
+ };
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => {
         window.removeEventListener('keydown', handleKeyDown);
     }
   })
-
-  const onBackdropClick = e => {
-     if(e.target === e.currentTarget) {
-      props.onClose()
-    } 
-  }
-
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {     
-      props.onClose()
-    }
-  };
 
         return createPortal(<div 
         className={css.overlay} 

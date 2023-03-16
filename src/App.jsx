@@ -24,7 +24,7 @@ export function App() {
     setSpinerView(true)
     fetchImages(searchingName, 1)
     .then(res => res.json())
-    .then(imagesRender => setImages(imagesRender.hits), setNumberPage(1), setSpinerView(false));     ////////////////////
+    .then(imagesRender => setImages(imagesRender.hits), setNumberPage(1), setSpinerView(false));     
   }, [searchingName])
 
   const onButtonClikRender = (e) => {
@@ -44,14 +44,12 @@ const handleForSubmit = (searchingName) => {
 }
 
 const onImageClick = e => { 
-  setLargeImgForModal(images.find(image => image.id === Number(e.currentTarget.id)).largeImageURL,
-  setShowModal(true))  
+  setLargeImgForModal((images.find(image => image.id === Number(e.currentTarget.id))).largeImageURL)
+  setShowModal(true)  
 }
 
 const toggleModal = () => {
-  setShowModal((showModal ) => ({
-    showModal: !showModal,
-  }));
+  setShowModal( !showModal);
 };
 
 
