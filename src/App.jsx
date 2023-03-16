@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import fetchImages from './components/services/serviceAPI'
 import css from 'App.module.css';
 import Searchbar from 'components/Searchbar/Searchbar';
@@ -8,90 +8,87 @@ import Modal from 'components/Modal/Modal';
 import { MagnifyingGlass } from  'react-loader-spinner'
 
 
-export class App extends Component {
- state = {
-   searchingName:'',
-   images: null,
-   numberPage: 1,
-   largeImgForModal:'',
-   showModal:false,
-   spinerView: false
+export function App() {
+  const [searchingName, setSearchingName] = useState('');
+  const [images, setImages] = useState(null);
+  const [numberPage, setNumberPage] = useState(1);
+  const [largeImgForModal, setLargeImgForModal] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [spinerView, setSpinerView] = useState(false);
+
+
+  useEffect(() => {
+    if (!searchingName) {
+      return
+    }
+    setSpinerView(true)
+    fetchImages(searchingName, 1)
+    .then(res => res.json())
+    .then(imagesRender => setImages(imagesRender.hits), setNumberPage(1), setSpinerView(false));     ////////////////////
+  }, [searchingName])
+
+  const onButtonClikRender = (e) => {
+    // const searchName = searchingName;
+    const searchPage = numberPage + 1; 
+
+    setSpinerView(true) 
+   fetchImages(searchingName, searchPage)
+    .then(res => res.json())
+    .then((imagesNext) => (setImages([...images, ...imagesNext.hits], 
+      setNumberPage(searchPage), setSpinerView(false)) )
+    );   
 }
 
- componentDidUpdate (prevState, prevProps) { 
-
- if (prevProps.searchingName !== this.state.searchingName) {
-      this.setState({spinerView: true}) 
-      fetchImages(this.state.searchingName, 1)
-      .then(res => res.json())
-      .then(imagesRender => this.setState({images: imagesRender.hits, numberPage: 1,  spinerView: false })); 
-  } 
-  window.addEventListener('keydown', this.handleKeyDown);
+const handleForSubmit = (searchingName) => {   
+  setSearchingName(searchingName)
 }
 
-  onButtonClikRender = (e) => {
-      const searchName = this.state.searchingName;
-      const searchPage = this.state.numberPage + 1; 
+const onImageClick = e => { 
+  setLargeImgForModal(images.find(image => image.id === Number(e.currentTarget.id)).largeImageURL,
+  setShowModal(true))  
+}
 
-    this.setState({spinerView: true}) 
-     fetchImages(searchName, searchPage)
-      .then(res => res.json())
-      .then((imagesNext) => (this.setState({images: [...this.state.images, ...imagesNext.hits], 
-              numberPage: searchPage, spinerView: false}) )
-      );   
-  }
-
-  handleForSubmit = (searchingName) => {   
-    this.setState({searchingName})
-  }
-
-  onImageClick = e => { 
-    const stateForBigImg = this.state.images
-    this.setState({largeImgForModal: (stateForBigImg.find(image => image.id === Number(e.currentTarget.id))).largeImageURL,
-    showModal: true})  
-  }
-
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
-  };
- 
-
-  render () {
-    const {searchingName, images, spinerView, showModal, largeImgForModal} = this.state;
-  
-    return (
-      <div className={css.App}>
-
-      <Searchbar        
-       onSubmit={this.handleForSubmit}></Searchbar>
-      
-      <ImageGallery 
-      value={searchingName} 
-      renderArray={images} 
-      onClick={this.onImageClick}/>
-
-      {(spinerView) && 
-        <MagnifyingGlass
-        visible={true}
-        height="80"
-        width="80"
-        ariaLabel="MagnifyingGlass-loading"
-        wrapperStyle={{}}
-        wrapperClass="MagnifyingGlass-wrapper"
-        glassColor = '#c0efff'
-        color = '#3f51b5'
-      />}  
-
-      {images !== null && 
-      <Button onClick={this.onButtonClikRender} />}
-      {showModal &&
-      <Modal 
-      imageForModal={largeImgForModal} 
-      onClose={this.toggleModal}/>}
-
-      </div>
-    );
-  }
+const toggleModal = () => {
+  setShowModal((showModal ) => ({
+    showModal: !showModal,
+  }));
 };
+
+
+  return (
+
+    <div className={css.App}>
+
+    <Searchbar        
+     onSubmit={handleForSubmit}></Searchbar>
+    
+    <ImageGallery 
+    value={searchingName} 
+    renderArray={images} 
+    onClick={onImageClick}/>
+
+    {(spinerView) && 
+      <MagnifyingGlass
+      visible={true}
+      height="80"
+      width="80"
+      ariaLabel="MagnifyingGlass-loading"
+      wrapperStyle={{}}
+      wrapperClass="MagnifyingGlass-wrapper"
+      glassColor = '#c0efff'
+      color = '#3f51b5'
+    />}  
+
+    {images !== null && 
+    <Button onClick={onButtonClikRender} />}
+    {showModal &&
+    <Modal 
+    imageForModal={largeImgForModal} 
+    onClose={toggleModal}/>}
+
+    </div>
+  );
+
+}
+
+  
