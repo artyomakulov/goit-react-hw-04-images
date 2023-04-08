@@ -21,10 +21,10 @@ function ImageGallery({ onClick, renderArray }) {
 
 ImageGallery.propTypes = {
   onClick: PropTypes.func.isRequired,
-  ImageGallery: PropTypes.arrayOf(
+  renderArray: PropTypes.arrayOf(
     PropTypes.shape({
       webformatURL: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
     })
   ),
 };
