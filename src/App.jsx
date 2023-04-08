@@ -7,7 +7,7 @@ import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import { MagnifyingGlass } from 'react-loader-spinner';
 
-export function App() {
+export default function App() {
   const [searchingName, setSearchingName] = useState('');
   const [images, setImages] = useState(null);
   const [numberPage, setNumberPage] = useState(1);
@@ -22,27 +22,24 @@ export function App() {
     setSpinerView(true);
     fetchImages(searchingName, 1)
       .then(res => res.json())
-      .then(
-        imagesRender => setImages(imagesRender.hits),
-        setNumberPage(1),
-        setSpinerView(false)
-      );
+      .then(imagesRender => {
+        setImages(imagesRender.hits);
+        setNumberPage(1);
+        setSpinerView(false);
+      });
   }, [searchingName]);
 
   const onButtonCliсkRender = e => {
-    // const searchName = searchingName;
     const searchPage = numberPage + 1;
 
     setSpinerView(true);
     fetchImages(searchingName, searchPage)
       .then(res => res.json())
-      .then(imagesNext =>
-        setImages(
-          [...images, ...imagesNext.hits],
-          setNumberPage(searchPage),
-          setSpinerView(false)
-        )
-      );
+      .then(imagesNext => {
+        setImages([...images, ...imagesNext.hits]);
+        setNumberPage(searchPage);
+        setSpinerView(false);
+      });
   };
 
   const handleForSubmit = searchingName => {
@@ -65,11 +62,7 @@ export function App() {
     <div className={css.App}>
       <Searchbar onSubmit={handleForSubmit}></Searchbar>
 
-      <ImageGallery
-        value={searchingName}
-        renderArray={images}
-        onClick={onImageClick}
-      />
+      <ImageGallery renderArray={images} onClick={onImageClick} />
 
       {spinerView && (
         <MagnifyingGlass
