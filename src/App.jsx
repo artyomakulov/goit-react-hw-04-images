@@ -29,7 +29,7 @@ export function App() {
       );
   }, [searchingName]);
 
-  const onButtonClikRender = e => {
+  const onButtonCliсkRender = e => {
     // const searchName = searchingName;
     const searchPage = numberPage + 1;
 
@@ -84,7 +84,7 @@ export function App() {
         />
       )}
 
-      {images !== null && <Button onClick={onButtonClikRender} />}
+      {images !== null && <Button onClick={onButtonCliсkRender} />}
       {showModal && (
         <Modal imageForModal={largeImgForModal} onClose={toggleModal} />
       )}
