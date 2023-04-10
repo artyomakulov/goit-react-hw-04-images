@@ -8,11 +8,12 @@ function ImageGallery({ onClick, renderArray }) {
   return (
     <ul className={css.imageGallery}>
       {renderArray !== null &&
-        renderArray.map(({ id, webformatURL }) => (
+        renderArray.map(({ id, webformatURL, largeImageURL }) => (
           <ImageGalleryItem
             key={id}
             webformatURL={webformatURL}
             onClick={onClick}
+            largeImageURL={largeImageURL}
           />
         ))}
     </ul>
@@ -25,6 +26,7 @@ ImageGallery.propTypes = {
     PropTypes.shape({
       webformatURL: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
     })
   ),
 };

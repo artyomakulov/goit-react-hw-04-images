@@ -46,11 +46,16 @@ export default function App() {
     setSearchingName(searchingName);
   };
 
-  const onImageClick = e => {
-    setLargeImgForModal(
-      images.find(image => image.id === Number(e.currentTarget.id))
-        .largeImageURL
-    );
+  // const onImageClick = e => {
+  //   setLargeImgForModal(
+  //     images.find(image => image.id === Number(e.currentTarget.id))
+  //       .largeImageURL
+  //   );
+  //   setShowModal(true);
+  // };
+
+const onImageClick = largeImageURL => {
+    setLargeImgForModal(largeImageURL);
     setShowModal(true);
   };
 
